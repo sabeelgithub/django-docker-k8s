@@ -8,5 +8,22 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
+    depends_on:
+      - db
     volumes:
-      - .:/app  
+      - .:/app 
+
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  
+
+volumes:
+  postgres-data:
+
