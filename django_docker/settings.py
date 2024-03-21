@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-7qy9c^)3&sg+43-u5jx^n9u5yzamh4hfapp34=-(%3_2l4$s8d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'drf_yasg',
+    'home'
 ]
 
 MIDDLEWARE = [
@@ -80,7 +83,7 @@ DATABASES = {
         "NAME": "postgres-django",
         "USER": "postgres",
         "PASSWORD": "password",
-        "HOST": "db",  # set in docker-compose.yml
+        "HOST": "postgres-service",  # set in docker-compose.yml
         "PORT": 5432,  # default postgres port
     }
 }

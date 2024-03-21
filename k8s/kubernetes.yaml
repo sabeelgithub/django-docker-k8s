@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-app-configuration
+  labels:
+    app: django-app
+data:
+  POSTGRES_SERVER: postgres-service
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: postgres-django
+  POSTGRES_USER: postgres
+  POSTGRES_SYNC_PREFIX: postgresql://
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-app-deployment
+  labels:
+    app: django-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django-app
+  template:
+    metadata:
+      labels:
+        app: django-app
+    spec:
+      containers:
+        - image: django-web
+          name: django-app
+          ports:
+            - containerPort: 80
+              name: gunicon
+          env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgres-credentials
+          envFrom:
+          - configMapRef:
+              name: django-app-configuration
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: django-app
+  name: django-app-service
+spec:
+  selector:
+    app: django-app
+  ports:
+  - port: 80
+    targetPort: 80
+  type: NodePort
